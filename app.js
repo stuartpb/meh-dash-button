@@ -1,15 +1,18 @@
 var dash_button = require('node-dash-button');
 var Nightmare = require('nightmare');
 
-var dashButtonMacAddress = 'dash button mac address';
-var username = 'meh.com username';
-var password = 'meh.com password';
-var site = 'https://meh.com';
+var dashButtonMacAddress = process.env.DASH_BUTTON_MAC_ADDRESS;
+var username = process.env.MEH_USERNAME;
+var password = process.env.MEH_PASSWORD;
+var site = process.env.MEH_SITE || 'https://meh.com';
 
 var dash = dash_button(dashButtonMacAddress);
 var lastPress = new Date(0);
 
-if (process.argv.indexOf('find') !== -1) {
+if (dashButtonMacAddress) {
+    console.log('Listening for Amazon Dash button with MAC address ' + dashButtonMacAddress);
+} else {
+    console.log('DASH_BUTTON_MAC_ADDRESS not specified')
     var pcap = require('pcap');
     var macAddresses = [];
 
@@ -49,8 +52,6 @@ if (process.argv.indexOf('find') !== -1) {
             }
         }
     });
-} else {
-    console.log('Listening for Amazon Dash button with MAC address ' + dashButtonMacAddress);
 }
 
 dash.on('detected', function (){
